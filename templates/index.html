@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoxBridge</title>
+  <!-- Flask serves files from the "static" folder using url_for -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Top bar: app name and detected language -->
+    <header class="topbar">
+      <h1>VoxBridge</h1>
+      <span id="language-badge" class="language-badge">Language: not detected yet</span>
+    </header>
+
+    <!-- Chat history: chat.js adds message bubbles inside this box -->
+    <main id="chat-box" class="chat-box">
+      <div class="message bot">
+        <p>Hello! Type or speak in any language and I will reply.</p>
+      </div>
+    </main>
+
+    <!-- Bottom bar: type a message, use the mic, or send -->
+    <footer class="input-bar">
+      <button id="mic-btn" class="icon-btn" type="button" aria-label="Speak your message">Mic</button>
+      <input id="message-input" type="text" placeholder="Type your message here..." autocomplete="off">
+      <button id="send-btn" class="send-btn" type="button">Send</button>
+    </footer>
+
+  </div>
+
+  <!-- Load voice.js first, because chat.js uses its functions -->
+  <script src="{{ url_for('static', filename='js/voice.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>
