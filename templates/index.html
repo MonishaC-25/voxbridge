@@ -4,36 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VoxBridge</title>
-  <!-- Flask serves files from the "static" folder using url_for -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-  <div class="app">
+  <!-- Screen 1: welcome page -->
+  <section id="landing" class="view active">
+    <nav class="nav"><span class="logo">VoxBridge</span></nav>
+    <div class="hero">
+      <div class="wave" aria-hidden="true">
+        <span style="--i:1"></span><span style="--i:2"></span><span style="--i:3"></span>
+        <span style="--i:4"></span><span style="--i:5"></span><span style="--i:6"></span>
+        <span style="--i:7"></span><span style="--i:8"></span><span style="--i:9"></span>
+      </div>
+      <h1>Talk in your language.<br>Be understood in any.</h1>
+      <p class="sub">Speak or type, and VoxBridge detects your language, replies in it, and reads the answer out loud.</p>
+      <button id="start-btn" class="cta" type="button">Start talking</button>
+      <ul class="chips">
+        <li>Detects your language</li>
+        <li>Speaks replies aloud</li>
+        <li>Type or talk</li>
+      </ul>
+    </div>
+  </section>
 
-    <!-- Top bar: app name and detected language -->
+  <!-- Screen 2: chat -->
+  <section id="chat-view" class="view">
     <header class="topbar">
-      <h1>VoxBridge</h1>
+      <button id="back-btn" class="back-btn" type="button">Back</button>
+      <h2>VoxBridge</h2>
       <span id="language-badge" class="language-badge">Language: not detected yet</span>
     </header>
 
-    <!-- Chat history: chat.js adds message bubbles inside this box -->
     <main id="chat-box" class="chat-box">
-      <div class="message bot">
-        <p>Hello! Type or speak in any language and I will reply.</p>
-      </div>
+      <div class="message bot"><p>Hello! Type or speak in any language and I will reply.</p></div>
     </main>
 
-    <!-- Bottom bar: type a message, use the mic, or send -->
     <footer class="input-bar">
       <button id="mic-btn" class="icon-btn" type="button" aria-label="Speak your message">Mic</button>
       <input id="message-input" type="text" placeholder="Type your message here..." autocomplete="off">
       <button id="send-btn" class="send-btn" type="button">Send</button>
     </footer>
+  </section>
 
-  </div>
-
-  <!-- Load voice.js first, because chat.js uses its functions -->
   <script src="{{ url_for('static', filename='js/voice.js') }}"></script>
   <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </body>
