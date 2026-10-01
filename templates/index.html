@@ -2,17 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>VoxBridge</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎙️</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
+  <!-- Loading screen: shown for a moment while the page starts up -->
+  <div id="loading-screen">
+    <div class="spinner" aria-hidden="true"></div>
+    <p>Loading VoxBridge…</p>
+  </div>
+
   <!-- Screen 1: welcome page -->
   <section id="landing" class="view active">
-    <nav class="nav"><span class="logo">VoxBridge</span></nav>
+    <nav class="nav">
+      <span class="logo">🎙️ VoxBridge</span>
+      <div class="nav-actions">
+        <button id="about-btn" class="ghost-btn" type="button">How it works</button>
+        <button id="theme-toggle" class="ghost-btn" type="button">Dark mode</button>
+      </div>
+    </nav>
     <div class="hero">
       <div class="wave" aria-hidden="true">
         <span style="--i:1"></span><span style="--i:2"></span><span style="--i:3"></span>
@@ -36,18 +49,89 @@
       <button id="back-btn" class="back-btn" type="button">Back</button>
       <h2>VoxBridge</h2>
       <span id="language-badge" class="language-badge">Language: not detected yet</span>
+      <button id="settings-btn" class="icon-only-btn" type="button" aria-label="Open settings">⚙️</button>
     </header>
 
-    <main id="chat-box" class="chat-box">
+    <div class="toolbar">
+      <label for="lang-picker">I'll speak in</label>
+      <select id="lang-picker" class="lang-select">
+        <option value="">Auto-detect</option>
+        <option value="en-US">English</option>
+        <option value="ta-IN">Tamil</option>
+        <option value="hi-IN">Hindi</option>
+        <option value="fr-FR">French</option>
+        <option value="es-ES">Spanish</option>
+        <option value="de-DE">German</option>
+      </select>
+      <button id="clear-btn" class="back-btn" type="button">Clear chat</button>
+    </div>
+
+    <main id="chat-box" class="chat-box" aria-live="polite">
       <div class="message bot"><p>Hello! Type or speak in any language and I will reply.</p></div>
     </main>
 
-    <footer class="input-bar">
-      <button id="mic-btn" class="icon-btn" type="button" aria-label="Speak your message">Mic</button>
-      <input id="message-input" type="text" placeholder="Type your message here..." autocomplete="off">
-      <button id="send-btn" class="send-btn" type="button">Send</button>
+    <footer class="input-bar-wrap">
+      <div class="input-bar">
+        <button id="mic-btn" class="icon-btn" type="button" aria-label="Speak your message">Mic</button>
+        <input id="message-input" type="text" placeholder="Type your message here..." autocomplete="off" maxlength="500">
+        <button id="send-btn" class="send-btn" type="button">Send</button>
+      </div>
+      <div id="char-count" class="char-count">0/500</div>
     </footer>
   </section>
+
+  <!-- Settings panel (slides in from the side) -->
+  <div id="settings-backdrop" class="backdrop"></div>
+  <aside id="settings-panel" class="settings-panel" aria-label="Settings">
+    <div class="settings-head">
+      <h3>Settings</h3>
+      <button id="settings-close" class="ghost-btn" type="button">Close</button>
+    </div>
+
+    <label class="switch-row">
+      <span>Dark mode</span>
+      <input type="checkbox" id="dark-toggle">
+    </label>
+
+    <label class="switch-row">
+      <span>Speak replies aloud</span>
+      <input type="checkbox" id="autospeak-toggle" checked>
+    </label>
+
+    <label class="switch-row">
+      <span>Hands-free mic (listen again after each reply)</span>
+      <input type="checkbox" id="handsfree-toggle">
+    </label>
+
+    <label class="slider-row">
+      <span>Speech speed</span>
+      <input type="range" id="speed-slider" min="0.5" max="1.5" step="0.1" value="1">
+    </label>
+  </aside>
+
+  <!-- Clear chat confirmation -->
+  <div id="clear-modal" class="backdrop">
+    <div class="modal">
+      <h3>Clear this chat?</h3>
+      <p>Your messages will be removed and can't be brought back.</p>
+      <div class="modal-actions">
+        <button id="clear-cancel" class="ghost-btn" type="button">Cancel</button>
+        <button id="clear-confirm" class="danger-btn" type="button">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- About / how it works -->
+  <div id="about-modal" class="backdrop">
+    <div class="modal">
+      <h3>How VoxBridge works</h3>
+      <p>Type or speak a message in any language. VoxBridge detects the language, replies in it, and can read the reply out loud.</p>
+      <p>Use the language dropdown so the microphone knows which language to listen for.</p>
+      <div class="modal-actions">
+        <button id="about-close" class="ghost-btn" type="button">Got it</button>
+      </div>
+    </div>
+  </div>
 
   <script src="{{ url_for('static', filename='js/voice.js') }}"></script>
   <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
